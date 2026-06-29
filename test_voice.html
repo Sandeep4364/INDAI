@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Voice Test</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+</head>
+<body style="font-family: Arial, sans-serif; padding: 16px;">
+  <h2>Voice API Test</h2>
+  <p id="status">Checking...</p>
+  <button id="btn" type="button">Test Microphone</button>
+  <p id="result" style="margin-top: 12px;"></p>
+
+  <script>
+    const status = document.getElementById('status');
+    const result = document.getElementById('result');
+    const btn = document.getElementById('btn');
+
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    if (SR) {
+      status.textContent = '✅ Speech Recognition supported';
+      status.style.color = 'green';
+    } else {
+      status.textContent = '❌ NOT supported — requires Chrome/Edge (SpeechRecognition / webkitSpeechRecognition)';
+      status.style.color = 'red';
+      btn.disabled = true;
+    }
+
+    btn.addEventListener('click', () => {
+      if (!SR) return;
+
+      result.textContent = '';
+      const r = new SR();
+      r.lang = 'en-US';
+      r.interimResults = true;
+      r.continuous = false;
+
+      r.onstart = () => {
+        result.textContent = '🎤 Listening... speak now';
+      };
+
+      r.onresult = (e) => {
+        const parts = Array.from(e.results).map(x => x[0]?.transcript).filter(Boolean);
+        const txt = parts.join('');
+        result.textContent = '✅ Heard: ' + txt;
+      };
+
+      r.onerror = (e) => {
+        result.textContent = '❌ Error: ' + e.error;
+      };
+
+      r.onend = () => {
+        result.textContent += ' (done)';
+      };
+
+      r.start();
+    });
+  </script>
+</body>
+</html>
+
