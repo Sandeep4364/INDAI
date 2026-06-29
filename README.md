@@ -194,3 +194,4 @@ After uploading the sample PDFs from `datasets/`:
 ## Built for
 
 ET AI Hackathon 2026 — Problem 8: AI for Industrial Knowledge Intelligence
+# INDAI
